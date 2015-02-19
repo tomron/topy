@@ -70,7 +70,10 @@ def load_rules(filename):
         replace = typo.attrs['replace']
 
         try:
-            r = regex.compile(find)
+            if opts.ignore:
+                r = regex.compile(find, regex.IGNORECASE)
+            else:
+                r = regex.compile(find)
             # Use \1 instead of $1 etc
             replace = replace.replace('$', '\\')
 
@@ -171,6 +174,9 @@ parser = OptionParser(usage="%prog [options] FILES/DIRS...")
 parser.add_option("-q", "--quiet",
                   action='store_true', dest='quiet', default=False,
                   help="silence information messages")
+parser.add_option("-i", "--ignore",
+                  action='store_true', dest='ignore', default=False,
+                  help="ignore case of the input string when matching")
 parser.add_option("-a", "--apply",
                   action='store_true', dest='apply', default=False,
                   help="overwrite files in place")
